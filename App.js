@@ -1,9 +1,59 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View, Button, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
+import { Alert, Image, StyleSheet, Text, View, Button, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
 import Expo from 'expo'
 import {
   StackNavigator,
 } from 'react-navigation';
+import * as firebase from 'firebase'
+import credentials from './credentials'
+
+class Login extends React.Component {
+  static navigationOptions = {
+    header: null
+  }
+
+  constructor() {
+    super()
+    firebase.initializeApp(credentials.FIREBASE_CONFIG)
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user != null) {
+        // connected
+        this.props.navigation.navigate('Home')
+      } else {
+        // disconnected
+      }
+    })
+  }
+
+  async loginWithFacebook() {
+    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
+      credentials.FACEBOOK_APP_ID,
+      { permissions: ['public_profile'] }
+    );
+
+    if (type === 'success') {
+      // Build Firebase credential with the Facebook access token.
+      const credential = firebase.auth.FacebookAuthProvider.credential(token);
+
+      // Sign in with credential from the Facebook user.
+      firebase.auth().signInWithCredential(credential).catch((error) => {
+        // Handle Errors here.
+        console.log(error)
+      });
+    }
+  }
+
+  render() {
+    return (
+      <View style={styles.login_container}>
+        <Button
+          title="Login With Facebook"
+          onPress={this.loginWithFacebook}
+        />
+      </View>
+    )
+  }
+}
 
 class App extends React.Component {
   static navigationOptions = {
@@ -51,13 +101,15 @@ class App extends React.Component {
     for(var i = 0; i <= groups.length - 2; i += 2) {
       let g1 = groups[i].name, g2 = groups[i+1].name
       let g1_img = groups[i].image, g2_img = groups[i+1].image
+      let g1_color = groups[i].color, g2_color = groups[i+1].color;
       rows.push(
         <View key={i} style={styles.row}>
 
           <TouchableOpacity activeOpacity={1} style={group_button_style(groups[i].color)}
             onPress={() => {
               this.props.navigation.navigate('Group', {
-                group_name: g1
+                group_name: g1,
+                color: g1_color
               })
             }}>
             <Image
@@ -70,7 +122,8 @@ class App extends React.Component {
           <TouchableOpacity activeOpacity={1} style={group_button_style(groups[i+1].color)}
             onPress={() => {
               this.props.navigation.navigate('Group', {
-                group_name: g2
+                group_name: g2,
+                color: g2_color
               })
             }}>
             <Image
@@ -103,7 +156,7 @@ class GroupView extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>You are on {this.props.navigation.state.params.group_name} group page</Text>
+        <Text>You are on {this.props.navigation.state.params.group_name} group page {this.props.navigation.state.params.color}</Text>
         <Text onPress={() => {
             this.props.navigation.navigate('Home')
           }}>Back to Home</Text>
@@ -134,10 +187,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent:'center'
   },
+  login_container: {
+    backgroundColor: "#FFC300",
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 
 export default StackNavigator({
+  Login: {
+    screen: Login
+  },
   Home: {
     screen: App
   },
