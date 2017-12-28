@@ -1,15 +1,36 @@
 import React from 'react';
-import { Alert, Image, StyleSheet, Text, View, Button, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
-import Expo from 'expo'
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Dimensions,
+  ScrollView,
+  TouchableOpacity
+} from 'react-native';
+import {
+  Expo,
+  AppLoading,
+} from 'expo'
 import {
   StackNavigator,
+  NavigationActions,
 } from 'react-navigation';
 import * as firebase from 'firebase'
 import credentials from './credentials'
 
+class User {
+    static uuid = null;
+}
+
 class Login extends React.Component {
   static navigationOptions = {
-    header: null
+    header: null,
+  }
+  state = {
+    noAuthData: true,
   }
 
   constructor() {
@@ -18,9 +39,19 @@ class Login extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user != null) {
         // connected
-        this.props.navigation.navigate('Home')
+        console.log(user)
+        User.uuid = user.uuid
+        this.props.navigation.dispatch(
+          NavigationActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({ routeName: 'Home'})
+            ]
+          })
+        )
       } else {
         // disconnected
+        this.setState({noAuthData: false})
       }
     })
   }
@@ -44,6 +75,12 @@ class Login extends React.Component {
   }
 
   render() {
+    if(this.state.noAuthData) {
+      return (
+        <AppLoading/>
+      )
+    }
+
     return (
       <View style={styles.login_container}>
         <Button
