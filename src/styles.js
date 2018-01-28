@@ -1,3 +1,5 @@
+import { StyleSheet, Dimensions } from 'react-native'
+
 export function group_button_style(color) {
     return {
       flex: 1,

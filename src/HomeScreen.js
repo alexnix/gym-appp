@@ -21,35 +21,35 @@ export default class HomeScreen extends React.Component {
       {
         color: "#900C3E",
         name: 'Arms',
-        image: require('./assets/Arms.png'),
+        image: require('./../assets/Arms.png'),
       }, {
         color: "#571845",
         name: 'Chest',
-        image: require('./assets/Chest.png'),
+        image: require('./../assets/Chest.png'),
       }, {
         color: "#C70039",
         name: 'Back',
-        image: require('./assets/Back.png'),
+        image: require('./../assets/Back.png'),
       }, {
         color: "#FF5733",
         name: 'Legs',
-        image: require('./assets/Legs.png'),
+        image: require('./../assets/Legs.png'),
       }, {
         color: "#900C3E",
         name:  'Abs',
-        image: require('./assets/Abs.png'),
+        image: require('./../assets/Abs.png'),
       }, {
         color: "#571845",
         name: 'Shoulders',
-        image: require('./assets/Shoulders.png'),
+        image: require('./../assets/Shoulders.png'),
       }, {
         color: "#C70039",
         name: 'Cardio',
-        image: require('./assets/Cardio.png'),
+        image: require('./../assets/Cardio.png'),
       }, {
         color: "#FF5733",
         name:  'Stretching',
-        image: require('./assets/Stretching.png'),
+        image: require('./../assets/Stretching.png'),
       }
     ];
     var rows = [];

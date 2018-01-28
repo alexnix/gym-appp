@@ -25,7 +25,7 @@ export default class LoginScreen extends React.Component {
       if (user != null) {
         // connected
         console.log(user)
-        User.uuid = user.uuid
+        // User.uuid = user.uuid
         this.props.navigation.dispatch(
           NavigationActions.reset({
             index: 0,
