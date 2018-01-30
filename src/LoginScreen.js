@@ -6,9 +6,9 @@ import {
 } from 'react-native';
 import { AppLoading } from 'expo'
 import { NavigationActions } from 'react-navigation';
-import * as firebase from 'firebase'
 import credentials from './credentials'
 import { styles } from './styles'
+import firebase from './database'
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -20,7 +20,6 @@ export default class LoginScreen extends React.Component {
 
   constructor() {
     super()
-    firebase.initializeApp(credentials.FIREBASE_CONFIG)
     firebase.auth().onAuthStateChanged((user) => {
       if (user != null) {
         // connected

@@ -1,32 +1,37 @@
 import React from 'react'
 import { 
     View,
+    Text,
     FlatList,
  } from 'react-native'
-import * as firebase from 'firebase'
-import credentials from './credentials'
+import firebase from './database'
 
 class NewExercise extends React.Component {
     render() {
         return (
-            <Text>{this.props.name}</Text>
+            <View>
+                <Text>{this.props.name}</Text>
+            </View>
         )
     }
 }
 
 export default class AddExerciseScreen extends React.Component {
+    static navigationOptions = {
+        header: null
+    }
+    
     state = {
         exercises: []
     }
 
-    constructor() {
-        super()
-        firebase.initializeApp(credentials.FIREBASE_CONFIG)
+    componentDidMount() {
         firebase
             .database()
-            .ref(`exercises/${this.props.forGroup.toLowerCase()}`)
-            .once('data')
+            .ref(`exercises/${this.props.navigation.state.params.forGroup.toLowerCase()}`)
+            .once('value')
             .then((snap) => {
+                console.log(snap.val())
                 this.setState({
                     exercises: snap.val()
                 })  
@@ -36,9 +41,10 @@ export default class AddExerciseScreen extends React.Component {
     render() {
         return (
             <View>
+                <Text>bla</Text>
                 <FlatList
-                    data={this.props.exercises}
-                    renderItem={(item) => <NewExercise name={item} />}
+                    data={this.state.exercises}
+                    renderItem={(i) => <NewExercise name={i.item} />}
                 />
             </View>
         )

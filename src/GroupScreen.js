@@ -8,6 +8,7 @@ import {
   Alert
 } from 'react-native';
 import { styles } from './styles'
+import db from './database'
 
 class ActiveExercise extends React.Component {
   render() {
@@ -30,6 +31,14 @@ export default class GroupScreen extends React.Component {
     header: null
   }
 
+  state = {
+    exercises: []
+  }
+
+  constructor() {
+    super()
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -38,18 +47,24 @@ export default class GroupScreen extends React.Component {
             this.props.navigation.goBack()
           }}>Back to Home</Text>
 
-          <FlatList
+          {/* <FlatList
             data={[{key: 'Ramat spate'}, {key: 'Deadlifts'}]}
             renderItem={({item}) => <ActiveExercise myOnPress={() => {
-              this.props.navigation.navigate('AddExercise', {
+              this.props.navigation.navigate('ExerciseScreen', {
                 forGroup: this.props.navigation.state.params.group_name
               })
             }} name={item.key} /> }
-          />
+          /> */}
 
-          <Text>  
-            Add exercise to this group
-          </Text>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              this.props.navigation.navigate('AddExercise', {
+                forGroup: this.props.navigation.state.params.group_name
+              })
+            }}
+          >  
+            <Text>Add exercise to this group</Text>
+          </TouchableWithoutFeedback>
       </View>
     )
   }
